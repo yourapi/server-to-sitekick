@@ -6,7 +6,7 @@
 """
 This file kickstarts the download and execution of the code from the Sitekick server.
 
-Copyright 2023 Sitekick
+Copyright 2025 Sitekick
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

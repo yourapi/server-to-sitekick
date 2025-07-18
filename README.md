@@ -16,9 +16,9 @@ to other providers, like cPanel, directadmin or custom hosting solutions.
 ## Installation
 The file is a Python (3.5+) compatible script. It can be run on any Plesk server that has Python installed. The script
 can be executed by calling python3, followed by the script name. The script has no dependencies on external modules. 
-1. Copy the file `send-data-to-sitekick.py` to a location of your choice, e.g. `/usr/local/bin/` or
+1. Copy the file `domains-to-sitekick.py` to a location of your choice, e.g. `/usr/local/bin/` or
 `/usr/local/src/`.
-2. To run the script, run: `python3 /usr/local/src/send-data-to-sitekick.py`
+2. To run the script, run: `python3 /usr/local/src/domains-to-sitekick.py`
 
 The script loads a number of files dynamically. These files and paths will be created in the same directory as the 
 script, so the current user should have write rights on the install directory. 
