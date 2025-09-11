@@ -186,15 +186,15 @@ Must be converted to JSON:
 
 def get_domains():
     """Get all domains from the local Plesk server."""
-    return get_info_cli('plesk bin site --list')
+    return get_info_cli('plesk bin site --list'.split())
 
 
 def get_domain_info(domain):
     """Get detailed information about the specified domain from the local Plesk server.
     When additional or different info is needed, change this function."""
-    domain_info_lines = get_info_cli('plesk bin domain --info ' + domain)
+    domain_info_lines = get_info_cli('plesk bin domain --info'.split() + [domain])
     # wp plugin list --format=json
-    domain_wp_plugin_lines = get_info_cli('plesk ext wp-toolkit --info -main-domain-id 1 -path /httpdocs -format raw')
+    domain_wp_plugin_lines = get_info_cli('plesk ext wp-toolkit --info -main-domain-id 1 -path /httpdocs -format raw'.split())
     # Convert the text info to a valid JSON string:
     domain_info = convert_domain_text_to_json(domain_info_lines)
     domain_info['Server'] = {'Hostname': hostname, 'IP-address': ip_address, 'MAC-address': mac_address}
