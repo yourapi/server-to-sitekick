@@ -179,7 +179,7 @@ def get_domain_info(domain):
     print('=' * 100)
     if domain_id and path:
         domain_wp_plugin_lines = get_info_cli(['plesk', 'ext', 'wp-toolkit', '--info', '-main-domain-id', domain_id, '-path', path, '-format', 'raw'])
-        domain_info['wp_plugins'] = convert_domain_text_to_json(domain_wp_plugin_lines)
+        domain_info['wp_plugins'] = domain_wp_plugin_lines
     domain_info['Server'] = {'Hostname': hostname, 'IP-address': ip_address, 'MAC-address': mac_address}
     domain_info['domain'] = domain
     return domain_info
