@@ -54,9 +54,9 @@ def get_providers():
 
 def get_domains_info(get_domains, get_domain_info, queue_path=QUEUE_PATH, cleanup=False, show_progress=True,
                      cutoff_lines=100):
-    """Get domain info from the local Plesk server and store the data per domain in a file in `queue_path`.
+    """Get domain info from the local server and store the data per domain in a file in `queue_path`.
     From there, the data is periodically pushed to the Sitekick-server."""
-    # Get all domains from the local Plesk server:
+    # Get all domains from the local server:
     domains = get_domains() if callable(get_domains) else get_domains
     Path(queue_path).mkdir(parents=True, exist_ok=True)
     # Clear the queue location:

@@ -27,7 +27,7 @@ def is_server_type():
     Any non-False suffices, but extra information (like the server type and version) can be returned.
     E.g. when on a plesk-server the code `providers.plesk.is_server_type() is called, it returns a string with
     the version info."""
-    return hostname == 'XPS17'
+    return hostname == 'zh-dev-omni-001'
 
 
 def get_domains():
