@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Black">
-    <option name="sdkName" value="Python 3.7.3 WSL (Debian): (/home/okapi/.virtualenvs/Internet.nl/bin/python)" />
+    <option name="sdkName" value="uv (server-to-sitekick)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.7 (server-to-sitekick)" project-jdk-type="Python SDK" />
 </project>

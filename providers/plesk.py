@@ -79,6 +79,28 @@ def get_info_api(endpoint, method=None, data=None):
 def get_info_cli(command, *args):
     """Get the specified information form the specified end point on the local Plesk server using the CLI. The CLI is
      executed using the API"""
+    # In Python 3.6, you use stdout=PIPE to capture the output
+    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # The output is in bytes, so you must decode it to a string
+    output_string = result.stdout.decode('utf-8')
+    lines = output_string.split('\n')
+    if lines and '\t' in lines[0]:
+        return [dict([line.split('\t', 1)]) for line in lines]
+    return lines
+
+    # Just return the output string, all parsing is done on the Sitekick-server. The result is stored as a blob in S3
+    return output_string
+
+    # Get the output as a list of lines, removing any empty lines
+    output_lines = [line for line in output_string.splitlines() if line]
+
+    # f-strings are available in Python 3.6
+    print("Command executed with exit code: {}".format(result.returncode))
+    print("--- Output Lines ---")
+    for line in output_lines:
+        print(line)
+
     result = get_info_api(f"cli/{command}/call", method='POST', data=json.dumps({'params': args}).encode())
     # The result is a number of lines with the result. If it contains a tab character, it is a table. Convert to JSON:
     lines = result.get('stdout', '').split('\n')
@@ -168,8 +190,11 @@ def get_domain_info(domain):
     """Get detailed information about the specified domain from the local Plesk server.
     When additional or different info is needed, change this function."""
     domain_info_lines = get_info_cli('domain', '--info', domain)
+    # wp plugin list --format=json
+    domain_wp_plugin_lines = get_info_cli('wp',  'plugin', 'list', '--format', 'json')
     # Convert the text info to a valid JSON string:
     domain_info = convert_domain_text_to_json(domain_info_lines)
     domain_info['Server'] = {'Hostname': hostname, 'IP-address': ip_address, 'MAC-address': mac_address}
     domain_info['domain'] = domain
+    domain_info['wp_plugins'] = convert_domain_text_to_json(domain_wp_plugin_lines)
     return domain_info
