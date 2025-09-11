@@ -80,7 +80,9 @@ def get_info_cli(command):
     """Get the specified information form the specified end point on the local Plesk server using the CLI. The CLI is
      executed using the API"""
     # In Python 3.6, you use stdout=PIPE to capture the output
+    print('command: ', command)
     result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    print('result: \n', result)
 
     # The output is in bytes, so you must decode it to a string
     output_string = result.stdout.decode('utf-8')
