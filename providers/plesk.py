@@ -84,22 +84,23 @@ def get_info_cli(command, *args):
 
     # The output is in bytes, so you must decode it to a string
     output_string = result.stdout.decode('utf-8')
-    lines = output_string.split('\n')
-    if lines and '\t' in lines[0]:
-        return [dict([line.split('\t', 1)]) for line in lines]
-    return lines
-
-    # Just return the output string, all parsing is done on the Sitekick-server. The result is stored as a blob in S3
-    return output_string
-
-    # Get the output as a list of lines, removing any empty lines
-    output_lines = [line for line in output_string.splitlines() if line]
-
-    # f-strings are available in Python 3.6
-    print("Command executed with exit code: {}".format(result.returncode))
-    print("--- Output Lines ---")
-    for line in output_lines:
-        print(line)
+    print(output_string)
+    # lines = output_string.split('\n')
+    # if lines and '\t' in lines[0]:
+    #     return [dict([line.split('\t', 1)]) for line in lines]
+    # return lines
+    #
+    # # Just return the output string, all parsing is done on the Sitekick-server. The result is stored as a blob in S3
+    # return output_string
+    #
+    # # Get the output as a list of lines, removing any empty lines
+    # output_lines = [line for line in output_string.splitlines() if line]
+    #
+    # # f-strings are available in Python 3.6
+    # print("Command executed with exit code: {}".format(result.returncode))
+    # print("--- Output Lines ---")
+    # for line in output_lines:
+    #     print(line)
 
     result = get_info_api(f"cli/{command}/call", method='POST', data=json.dumps({'params': args}).encode())
     # The result is a number of lines with the result. If it contains a tab character, it is a table. Convert to JSON:
