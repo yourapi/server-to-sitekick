@@ -83,10 +83,7 @@ def get_info_cli(command):
     result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     # The output is in bytes, so you must decode it to a string
     output_string = result.stdout.decode('utf-8')
-    lines = output_string.split('\n')
-    if lines and '\t' in lines[0]:
-        return [dict([line.split('\t', 1)]) for line in lines]
-    return lines
+    return output_string
 
 def convert_domain_text_to_json(domain_info_lines: list) -> dict:
     """Get the domain info as a number of lines and convert it to Python dict structure. An example of the text output:
@@ -162,24 +159,24 @@ Must be converted to JSON:
 
 def get_domains():
     """Get all domains from the local Plesk server."""
-    return [line.strip() for line in get_info_cli('plesk bin site --list'.split()) if line.strip()]
+    return [line.strip() for line in get_info_cli(['plesk', 'bin', 'site', '--list']).split('\n') if line.strip()]
 
 
 def get_domain_info(domain):
     """Get detailed information about the specified domain from the local Plesk server.
     When additional or different info is needed, change this function."""
-    domain_info_lines = get_info_cli('plesk bin domain --info'.split() + [domain])
+    domain_info = get_info_cli(['plesk', 'bin', 'domain', '--info', domain])
+    result = {
+        'Server': {'Hostname': hostname, 'IP-address': ip_address, 'MAC-address': mac_address},
+        'domain': domain,
+        'info':  domain_info
+    }
     # Convert the text info to a valid JSON string:
-    domain_info = convert_domain_text_to_json(domain_info_lines)
+    domain_info = convert_domain_text_to_json(domain_info.split('\n'))
     domain_id = domain_info.get('General', {}).get('Domain ID')
     absolute_path = domain_info.get('Logrotation info', {}).get('--WWW-Root--')
     path = absolute_path.split(domain)[-1] if absolute_path else None
-    print('=' * 100)
-    print(domain_id, path)
-    print('=' * 100)
     if domain_id and path:
-        domain_wp_plugin_lines = get_info_cli(['plesk', 'ext', 'wp-toolkit', '--info', '-main-domain-id', domain_id, '-path', path, '-format', 'raw'])
-        domain_info['wp_plugins'] = domain_wp_plugin_lines
-    domain_info['Server'] = {'Hostname': hostname, 'IP-address': ip_address, 'MAC-address': mac_address}
-    domain_info['domain'] = domain
-    return domain_info
+        domain_wp_plugin_info = get_info_cli(['plesk', 'ext', 'wp-toolkit', '--info', '-main-domain-id', domain_id, '-path', path, '-format', 'raw'])
+        result['wp_plugins'] = domain_wp_plugin_info
+    return result
