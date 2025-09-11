@@ -80,37 +80,13 @@ def get_info_cli(command):
     """Get the specified information form the specified end point on the local Plesk server using the CLI. The CLI is
      executed using the API"""
     # In Python 3.6, you use stdout=PIPE to capture the output
-    print('command: ', command)
     result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    print('result: \n', result)
-
     # The output is in bytes, so you must decode it to a string
     output_string = result.stdout.decode('utf-8')
-    print(output_string)
     lines = output_string.split('\n')
     if lines and '\t' in lines[0]:
         return [dict([line.split('\t', 1)]) for line in lines]
     return lines
-    #
-    # # Just return the output string, all parsing is done on the Sitekick-server. The result is stored as a blob in S3
-    # return output_string
-    #
-    # # Get the output as a list of lines, removing any empty lines
-    # output_lines = [line for line in output_string.splitlines() if line]
-    #
-    # # f-strings are available in Python 3.6
-    # print("Command executed with exit code: {}".format(result.returncode))
-    # print("--- Output Lines ---")
-    # for line in output_lines:
-    #     print(line)
-
-    result = get_info_api(f"cli/{command}/call", method='POST', data=json.dumps({'params': args}).encode())
-    # The result is a number of lines with the result. If it contains a tab character, it is a table. Convert to JSON:
-    lines = result.get('stdout', '').split('\n')
-    if lines and '\t' in lines[0]:
-        return [dict([line.split('\t', 1)]) for line in lines]
-    return lines
-
 
 def convert_domain_text_to_json(domain_info_lines: list) -> dict:
     """Get the domain info as a number of lines and convert it to Python dict structure. An example of the text output:
