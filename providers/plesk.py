@@ -174,6 +174,9 @@ def get_domain_info(domain):
     domain_id = domain_info.get('General', {}).get('Domain ID')
     absolute_path = domain_info.get('Logrotation info', {}).get('--WWW-Root--')
     path = absolute_path.split(domain)[-1] if absolute_path else None
+    print('=' * 100)
+    print(domain_id, path)
+    print('=' * 100)
     if domain_id and path:
         domain_wp_plugin_lines = get_info_cli(['plesk', 'ext', 'wp-toolkit', '--info', '-main-domain-id', domain_id, '-path', path, '-format', 'raw'])
         domain_info['wp_plugins'] = convert_domain_text_to_json(domain_wp_plugin_lines)
