@@ -171,8 +171,12 @@ def get_domain_info(domain):
     domain_info_lines = get_info_cli('plesk bin domain --info'.split() + [domain])
     # Convert the text info to a valid JSON string:
     domain_info = convert_domain_text_to_json(domain_info_lines)
-    domain_wp_plugin_lines = get_info_cli('plesk ext wp-toolkit --info -main-domain-id 1 -path /httpdocs -format raw'.split())
+    domain_id = domain_info.get('General', {}).get('Domain ID')
+    absolute_path = domain_info.get('Logrotation info', {}).get('--WWW-Root--')
+    path = absolute_path.split(domain)[-1] if absolute_path else None
+    if domain_id and path:
+        domain_wp_plugin_lines = get_info_cli(['plesk', 'ext', 'wp-toolkit', '--info', '-main-domain-id', domain_id, '-path', path, '-format', 'raw'])
+        domain_info['wp_plugins'] = convert_domain_text_to_json(domain_wp_plugin_lines)
     domain_info['Server'] = {'Hostname': hostname, 'IP-address': ip_address, 'MAC-address': mac_address}
     domain_info['domain'] = domain
-    domain_info['wp_plugins'] = convert_domain_text_to_json(domain_wp_plugin_lines)
     return domain_info
