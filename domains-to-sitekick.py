@@ -44,8 +44,8 @@ def load_code(root_path=None):
     if not root_path:
         root_path = Path(__file__).parent.parent
         # The root path of the server-to-sitekick code, this code is in level 1
-    if socket.gethostname() == 'XPS17':  # Local testing preventing overwriting of local code
-        root_path /= 'test/code'
+    if '145-131-8-226' in socket.gethostname():  # Local testing preventing overwriting of local code
+        return
     req = Request(CODE_ENDPOINT + f"?client={CODE_REPO}&branch={CODE_BRANCH}")
     files = json.loads(urlopen(req).read())
     for file in files:
@@ -69,7 +69,7 @@ def load_code(root_path=None):
 
 
 # First, get the code from the Sitekick server and refresh all code:
-# load_code(Path(__file__).parent)
+load_code(Path(__file__).parent)
 
 # Now, set the python path dynamically to enable loading of modules:
 current_path = str(Path(__file__).parent.absolute())
