@@ -79,12 +79,12 @@ def get_info_api(endpoint, method=None, data=None):
 def get_info_cli(command, *args):
     """Get the specified information form the specified end point on the local Plesk server using the CLI. The CLI is
      executed using the API"""
-    # In Python 3.6, you use stdout=PIPE to capture the output
-    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-    # The output is in bytes, so you must decode it to a string
-    output_string = result.stdout.decode('utf-8')
-    print(output_string)
+    # # In Python 3.6, you use stdout=PIPE to capture the output
+    # result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #
+    # # The output is in bytes, so you must decode it to a string
+    # output_string = result.stdout.decode('utf-8')
+    # print(output_string)
     # lines = output_string.split('\n')
     # if lines and '\t' in lines[0]:
     #     return [dict([line.split('\t', 1)]) for line in lines]
