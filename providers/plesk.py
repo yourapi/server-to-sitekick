@@ -5,8 +5,6 @@ but does not contain all information. The CLI is also callable through the API, 
 The cli is used to retrieve a complete list of domains and to get detailed information about a domain.
 The text information is converted to json format, so it can be sent easily.
 """
-import subprocess
-
 from sitekick.utils import hostname, ip_address, mac_address, cli
 
 tokens = dict()

@@ -3,7 +3,6 @@ import socket
 import subprocess
 from uuid import getnode
 
-
 hostname = socket.gethostname()
 ip_address = socket.gethostbyname(hostname)
 try:
