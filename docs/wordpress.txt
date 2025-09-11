@@ -1,0 +1,266 @@
+Usage:
+  plesk ext wp-toolkit --help -command COMMAND_NAME
+
+    Provides help for the specified WP Toolkit command
+
+
+  plesk ext wp-toolkit --backup
+                   -instance-id INSTANCE_ID|-main-domain-id DOMAIN_ID -path PATH
+                   -operation list|backup|restore -filename filename
+                   [-format raw|json]
+
+    WordPress site backup
+
+
+  plesk ext wp-toolkit --clear-cache
+                   -instance-id INSTANCE_ID|-main-domain-id DOMAIN_ID -path PATH
+                   [-format raw|json]
+                   [-action-log-existence]
+                   [-main-information]
+                   [-ssl-statuses]
+                   [-admin-credentials]
+                   [-admin-login-link]
+                   [-php]
+                   [-plugins]
+                   [-themes]
+                   [-config]
+                   [-maintenance-mode]
+                   [-table-prefix]
+                   [-force-updates]
+                   [-security-measures]
+                   [-protected-dir]
+                   [-screenshot]
+                   [-virtual-patches]
+                   [-virtual-patches-for-end-customer]
+                   [-plugin-modules]
+                   [-remote-agent-instance]
+                   [-nginx-caching]
+
+    Clears the cache of the selected WordPress installation.
+
+
+  plesk ext wp-toolkit --clone
+                   -source-instance-id INSTANCE_ID
+                   (-target-domain-name DOMAIN_NAME | -target-domain-id DOMAIN_ID)
+                   [-target-path PATH]
+                   [-target-db-name DB_NAME]
+                   [-target-db-server-id DB_SERVER_ID]
+                   [-target-db-user-login DB_USER_LOGIN]
+                   [-force-overwrite yes|no]
+                   [-format raw|json]
+                   [-show-progress yes|no]
+
+    Clone WordPress site into another domain and/or subdirectory
+
+
+  plesk ext wp-toolkit --config
+                   -operation list|get|set|rollback
+                   [-option-name OPTION_NAME]
+                   [-option-value OPTION_VALUE]
+                   [-format raw|json]
+
+    Displays the list of configuration options and allows to get or set options by their name (except read-only).
+
+
+  plesk ext wp-toolkit --copy-data
+                   -source-instance-id SOURCE_INSTANCE_ID
+                   -target-instance-id TARGET_INSTANCE_ID
+                   [-data-to-copy all|files|db]
+                   [-files-replace-modified yes|no]
+                   [-files-remove-missing yes|no]
+                   [-db-tables-copy-mode default|all|new|selected]
+                   [-db-tables COMMA_SEPARATED_LIST_OF_TABLE_NAMES]
+                   [-exclude-db-tables COMMA_SEPARATED_LIST_OF_TABLE_NAMES]
+                   [-create-restore-point yes|no]
+                   [-show-progress yes|no]
+
+    Copy data (files and database tables) from one WordPress site to another
+
+
+  plesk ext wp-toolkit --detach
+                   -instance-id INSTANCE_ID|-main-domain-id DOMAIN_ID -path PATH
+
+    Detach WordPress website.
+
+
+  plesk ext wp-toolkit --list
+                   [-main-domain-id DOMAIN_ID]
+                   [-plugins]
+                   [-themes]
+                   [-format raw|json]
+
+    Displays a brief description of WordPress installations matching the specified filter.
+
+
+  plesk ext wp-toolkit --info
+                   -instance-id INSTANCE_ID|-main-domain-id DOMAIN_ID -path PATH
+                   [-format raw|json]
+
+    Displays detailed information about the WordPress installation matching the specified filter.
+
+
+  plesk ext wp-toolkit --install
+                   (-domain-id DOMAIN_ID | -domain-name DOMAIN_NAME)
+                   [-username USERNAME]
+                   [-admin-email EMAIL]
+                   [-protocol PROTOCOL]
+                   [-path PATH]
+                   [-version VERSION]
+                   [-language LANGUAGE]
+                   [-db-server DB_SERVER]
+                   [-db-name DB_NAME]
+                   [-db-user DB_USER]
+                   [-table-prefix TABLE_PREFIX]
+                   [-set-id SET_ID]
+                   [-site-title SITE_TITLE]
+                   [-auto-updates true|false|minor]
+                   [-plugins-auto-updates true|false|true-for-new]
+                   [-themes-auto-updates true|false|true-for-new]
+                   [-format raw|json]
+                   [-show-progress yes|no]
+
+    Installs new WordPress site.
+
+
+  plesk ext wp-toolkit --languages
+                   -version VERSION
+                   [-format raw|json]
+
+    Displays the list of languages available for the specified WordPress version.
+
+
+  plesk ext wp-toolkit --plugins
+                   -operation list-custom|add|remove|install
+                   [-format raw|json]
+
+    Managing uploaded plugins
+
+
+  plesk ext wp-toolkit --register
+                   -main-domain-id DOMAIN_ID -path PATH
+                   [-format raw|json]
+
+    Adds a WordPress installation to WP Toolkit using the main domain ID and the relative path.
+
+
+  plesk ext wp-toolkit --remote-agent-instance -operation connect
+                   -url WORDPRESS_URL
+                   -login USERNAME
+
+
+  plesk ext wp-toolkit --remote-agent-instance -operation manual-connect
+                   -plugin-url PLUGIN_URL
+
+
+  plesk ext wp-toolkit --remote-agent-instance -operation update-properties
+                   -instance-id INSTANCE_ID
+                   -plugin-url PLUGIN_URL
+                   [-ip IP_ADDRESS]
+
+
+  plesk ext wp-toolkit --remote-agent-instance -operation list
+                   [-format raw|json]
+
+
+  plesk ext wp-toolkit --remove
+                   -instance-id INSTANCE_ID|-main-domain-id DOMAIN_ID -path PATH
+                   [-leave-db] [-leave-db-user] [-leave-action-logs]
+                   [-format raw|json]
+
+    Removes WordPress site.
+
+
+  plesk ext wp-toolkit --sets
+                   -operation list|info|add|remove|rename|add-plugin|add-theme|remove-plugin|remove-theme|install|activate-plugin|deactivate-plugin|activate-theme|deactivate-theme
+                   [-format raw|json]
+
+    Displays available sets of plugins and themes.
+
+
+  plesk ext wp-toolkit --site-admin-reset-password
+                   -instance-id INSTANCE_ID|-main-domain-id DOMAIN_ID -path PATH
+                   [-admin-login USERNAME] Admin username. Can be omitted if there is only one administrator
+                   [-format raw|json]
+
+    Reset WordPress administrator password
+
+
+  plesk ext wp-toolkit --smart-update
+                   -instance-id INSTANCE_ID|-main-domain-id DOMAIN_ID -path PATH
+                   -operation status|enable|disable
+                   [-format raw|json]
+
+    Smart Updates
+
+
+  plesk ext wp-toolkit --themes
+                   -operation list-custom|add|remove
+                   [-format raw|json]
+
+    Managing uploaded themes
+
+
+  plesk ext wp-toolkit --update-login-url-suffix
+                   -instance-id INSTANCE_ID|-main-domain-id DOMAIN_ID -path PATH
+                   -suffix SUFFIX
+                   [-format raw|json]
+
+    Change WordPress login URL suffix
+
+
+  plesk ext wp-toolkit --update-site-url
+                   -instance-id INSTANCE_ID|-main-domain-id DOMAIN_ID -path PATH
+                   [-format raw|json]
+
+    Update site URL
+
+
+  plesk ext wp-toolkit --versions
+                   [-format raw|json]
+
+    Displays available WordPress versions that can be installed with WP Toolkit.
+
+
+  plesk ext wp-toolkit --wp-cli
+                   -instance-id INSTANCE_ID|-main-domain-id DOMAIN_ID -path PATH
+                   -- WP_SUBCOMMAND
+
+    Executes a wp-cli call to the selected WordPress installation.
+
+
+  plesk ext wp-toolkit --wp-config
+                   -instance-id INSTANCE_ID|-main-domain-id DOMAIN_ID -path PATH
+                   --
+                   [-db-charset DB_CHARSET]
+                   [-db-name DB_NAME]
+                   [-db-user DB_USER]
+                   [-db-password DB_PASSWORD]
+                   [-db-host DB_HOST]
+                   [-domain-current-site DOMAIN_CURRENT_SITE]
+                   [-path-current-site PATH_CURRENT_SITE]
+                   [-multisite MULTISITE]
+                   [-subdomain-install SUBDOMAIN_INSTALL]
+                   [-wp-auto-update-core WP_AUTO_UPDATE_CORE]
+                   [-wpcachehome WPCACHEHOME]
+                   [-wp-debug WP_DEBUG]
+                   [-wp-debug-log WP_DEBUG_LOG]
+                   [-wp-debug-display WP_DEBUG_DISPLAY]
+                   [-script-debug SCRIPT_DEBUG]
+                   [-savequeries SAVEQUERIES]
+                   [-wp-home WP_HOME]
+                   [-wp-siteurl WP_SITEURL]
+                   [-concatenate-scripts CONCATENATE_SCRIPTS]
+                   [-disallow-file-edit DISALLOW_FILE_EDIT]
+                   [-wp-cache-key-salt WP_CACHE_KEY_SALT]
+                   [-disable-wp-cron DISABLE_WP_CRON]
+                   [-wp-redis-prefix WP_REDIS_PREFIX]
+                   [-wp-toolkit-api-token WP_TOOLKIT_API_TOKEN]
+                   [-wp-toolkit-analytics WP_TOOLKIT_ANALYTICS]
+                   [-wp-toolkit-analytics-key WP_TOOLKIT_ANALYTICS_KEY]
+                   [-wp-toolkit-analytics-host WP_TOOLKIT_ANALYTICS_HOST]
+
+                   All wp-config settings can be passed through environment variables (to do this, you must specify an empty parameter value)
+
+    Update wp-config.php settings
+
+
