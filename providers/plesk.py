@@ -5,6 +5,8 @@ but does not contain all information. The CLI is also callable through the API, 
 The cli is used to retrieve a complete list of domains and to get detailed information about a domain.
 The text information is converted to json format, so it can be sent easily.
 """
+import re
+
 from sitekick.utils import hostname, ip_address, mac_address, cli
 
 tokens = dict()
@@ -14,10 +16,10 @@ DOMAIN_POST_INTERVAL = 100  # seconds
 
 
 def is_server_type():
-    """Get the server information from the api. If the api is not available, it raises an exception so this provider
+    """Get the server information from the command line. If the api is not available, it raises an exception so this provider
     is not used."""
     result = cli(['plesk', 'version'])
-    return result if 'version' in result else None
+    return re.search(r'version.*\d+\.\d+', result, re.I + re.DOTALL)
 
 
 def convert_domain_text_to_json(domain_info_lines: list) -> dict:
@@ -25,53 +27,25 @@ def convert_domain_text_to_json(domain_info_lines: list) -> dict:
 General
 =============================
 Domain name:                            sitekick.eu
-Owner's contact name:                   Administrator (admin)
-Domain status:                          OK
 Creation date:                          Oct 20, 2023
-Total size of backup files in local storage:0 B
-Traffic:                                0 B/Month
 
 Hosting
 =============================
 Hosting type:                           Physical hosting
 IP Address:                             145.131.8.226
 FTP Login:                              sitekick.eu_34gqrbu1k9m
-FTP Password:                           ************
-SSH access to the server shell under the subscription's system user:/bin/false
-Hard disk quota:                        Unlimited (not supported)
-Disk space used by httpdocs:            96.0 KB
-Disk space used by Log files and statistical reports:28.0 KB
-SSL/TLS support:                        On
-Permanent SEO-safe 301 redirect from HTTP to HTTPS:On
-PHP support:                            Yes
-Python support:                         No
-Web statistics:                         AWStats
-Anonymous FTP:                          No
-Disk space used by Anonymous FTP:       0 B
 
 Web Users
 =============================
 Total :                                 0
 PHP support:                            0
-Python support:                         0
-Total size:                             0 B
 
-Mail Accounts
-=============================
-Mail service:                           On
-Total :                                 3
-Total size:                             0 B
-Mail autodiscover:                      On
 
 Must be converted to JSON:
 {
     "General": {
         "Domain name": "sitekick.eu",
-        "Owner\"s contact name": "Administrator (admin)",
-        "Domain status": "OK",
         "Creation date": "Oct 20, 2023",
-        "Total size of backup files in local storage": "0 B",
-        "Traffic": "0 B/Month"
     },
     "Hosting": {
         "Hosting type": "Physical hosting",
