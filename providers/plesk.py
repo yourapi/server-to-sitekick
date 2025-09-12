@@ -16,7 +16,8 @@ DOMAIN_POST_INTERVAL = 100  # seconds
 def is_server_type():
     """Get the server information from the api. If the api is not available, it raises an exception so this provider
     is not used."""
-    return cli(['plesk', 'version'])
+    result = cli(['plesk', 'version'])
+    return result if 'version' in result else None
 
 
 def convert_domain_text_to_json(domain_info_lines: list) -> dict:
