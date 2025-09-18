@@ -33,7 +33,7 @@ from pathlib import Path
 from urllib.request import urlopen, Request
 
 from sitekick.config import QUEUE_PATH, SITEKICK_PUSH_URL
-from sitekick.utils import now, hostname, ip_address
+from sitekick.utils import now, hostname, ip_address, mac_address
 
 DEFAULT_DOMAIN_COUNT_PER_POST = 20  # number of detailed domain info packages to send per post
 DEFAULT_DOMAIN_POST_INTERVAL = 10  # seconds
@@ -76,7 +76,15 @@ def get_domains_info(get_domains, get_domain_info, queue_path=QUEUE_PATH, cleanu
             for attempt in range(10):
                 try:
                     domain_info = get_domain_info(domain)
-                    domain_info['_type'] = get_domain_info.__module__.split('.')[-1]
+                    meta = {
+                        'type': get_domain_info.__module__.split('.')[-1],
+                        'domain': domain,
+                        'hostname': hostname,
+                        'ip': ip_address,
+                        'timestamp': now(),
+                        'mac': mac_address
+                    }
+                    domain_info['meta'] = meta
                     break
                 except Exception as e:
                     print(

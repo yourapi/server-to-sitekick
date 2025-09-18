@@ -32,7 +32,7 @@ def is_server_type():
 
 def get_domains():
     """Get all domains from the local hosting server."""
-    return [f"domain-{i:03}.com" for i in range(1, 1001)]
+    return [f"domain-{i:03}.com" for i in range(1, 11)]
 
 
 def get_domain_info(domain):

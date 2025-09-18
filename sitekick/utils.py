@@ -1,6 +1,7 @@
 import datetime
 import socket
 import subprocess
+import time
 from uuid import getnode
 
 hostname = socket.gethostname()
@@ -12,7 +13,7 @@ except:
 
 
 def now():
-    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.datetime.now().astimezone().isoformat()
 
 def cli(command, include_stderr=False):
     """Execute the specified command as the current user from the command line interface (cli). Specify the command as
