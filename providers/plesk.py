@@ -27,7 +27,7 @@ def convert_domain_text_to_json(domain_info_lines: list) -> dict:
 General
 =============================
 Domain name:                            sitekick.eu
-Creation date:                          Oct 20, 2023
+Creation date:                          Oct 20, 2024
 
 Hosting
 =============================
