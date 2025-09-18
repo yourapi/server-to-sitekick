@@ -6,7 +6,7 @@ import sys
 from sitekick.utils import now, hostname, ip_address, mac_address
 
 EXECUTE_PARALLEL = False
-DOMAIN_COUNT_PER_POST = 100
+DOMAIN_COUNT_PER_POST = 10
 DOMAIN_POST_INTERVAL = 1
 
 def is_server_type():

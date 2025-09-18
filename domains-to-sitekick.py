@@ -69,7 +69,7 @@ def load_code(root_path=None):
 
 
 # First, get the code from the Sitekick server and refresh all code:
-load_code(Path(__file__).parent)
+# load_code(Path(__file__).parent)
 
 # Now, set the python path dynamically to enable loading of modules:
 current_path = str(Path(__file__).parent.absolute())

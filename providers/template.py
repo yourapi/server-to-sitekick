@@ -19,7 +19,7 @@ DOMAIN_POST_INTERVAL    Seconds, interval between posts. Defaults to sitekick.se
 from sitekick.utils import now, hostname, ip_address, mac_address
 
 EXECUTE_PARALLEL = False
-DOMAIN_COUNT_PER_POST = 100
+DOMAIN_COUNT_PER_POST = 10  # Count and interval are optionally specified per module
 DOMAIN_POST_INTERVAL = 1
 
 def is_server_type():
@@ -39,5 +39,5 @@ def get_domain_info(domain):
     """Get detailed information about the specified domain from the local hosting server.
     When additional or different info is needed, change this function."""
     import time
-    time.sleep(0.01)
+    # time.sleep(0.01)
     return {'domain': domain, 'ip': ip_address, 'mac': mac_address, 'hostname': hostname, 'now': now()}

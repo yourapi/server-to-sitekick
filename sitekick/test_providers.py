@@ -55,7 +55,7 @@ def test_modules(which_modules=None):
                     print(f"{module.__name__}.get_domains(): duplicate domains found, {len(domains) - len(set(domains))} duplicates.")
                 if domains:
                     # Show a sample of the domains, random 5 sorted domains:
-                    domains = sorted(random.sample(set(domains), min(len(set(domains)), 5)))
+                    domains = sorted(random.sample(list(set(domains)), min(len(set(domains)), 5)))
                     s_domains = ', '.join(domains)
                     print(f"Sample of domains: {s_domains}")
         except Exception as e:
