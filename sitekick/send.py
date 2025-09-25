@@ -96,9 +96,9 @@ def get_domains_info(get_domains, get_domain_info, queue_path=QUEUE_PATH, cleanu
             with Path(queue_path, f"{i:08}-{domain}.json").open('w') as f:
                 f.write(json.dumps(domain_info, indent=4))
             # Demo: write domain info
-            print('Domain: ', domain)
-            print('Info on domain:')
-            print(json.dumps(domain_info, indent=4))
+            # print('Domain: ', domain)
+            # print('Info on domain:')
+            # print(json.dumps(domain_info, indent=4))
             if show_progress:
                 if i % cutoff_lines == 0:
                     print(f"{i} {now()}: {domain} (Sitekick)", flush=True)
