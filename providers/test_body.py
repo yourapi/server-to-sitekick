@@ -19,7 +19,7 @@ DOMAIN_POST_INTERVAL    Seconds, interval between posts. Defaults to sitekick.se
 from sitekick.utils import now, hostname, ip_address, mac_address
 
 EXECUTE_PARALLEL = False
-DOMAIN_COUNT_PER_POST = 10  # Count and interval are optionally specified per module
+DOMAIN_COUNT_PER_POST = 20  # Count and interval are optionally specified per module
 DOMAIN_POST_INTERVAL = 1
 
 def is_server_type():
@@ -32,15 +32,13 @@ def is_server_type():
 
 def get_domains():
     """Get all domains from the local hosting server."""
-    return [f"domain-{i:03}.com" for i in range(1, 101)]
+    return [f"domain-{i:03}.com" for i in range(1, 10001)]
 
 
 def get_domain_info(domain):
     """Get detailed information about the specified domain from the local hosting server.
     When additional or different info is needed, change this function."""
-    data = {'Server': {'Hostname': 'beautiful-greider.145-131-8-226.plesk.page',
-                'IP-address': '145.131.8.226',
-                'MAC-address': '00:1D:D8:B7:6C:ED'},
+    data = {
      'domain': domain,
      'info': '\n'
              'General\n'
@@ -144,7 +142,6 @@ def get_domain_info(domain):
              '\n'
              '\n'
              "SUCCESS: Gathering information for 'sitekick.eu' completed.\n",
-     'provider': 'plesk',
      'wp_plugins': 'ID                                 2\n'
                    'Main Domain ID                     1\n'
                    'Installation Path                  /httpdocs\n'
