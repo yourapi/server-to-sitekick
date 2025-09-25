@@ -32,11 +32,11 @@ from importlib import import_module
 from pathlib import Path
 from urllib.request import urlopen, Request
 
-from sitekick.config import QUEUE_PATH, PLESK_COMMUNICATION_TOKEN, SITEKICK_PUSH_URL
-from sitekick.utils import now, hostname, ip_address
+from sitekick.config import QUEUE_PATH, SITEKICK_PUSH_URL
+from sitekick.utils import now, hostname, ip_address, mac_address
 
-DOMAIN_COUNT_PER_POST = 200  # number of detailed domain info packages to send per post
-DOMAIN_POST_INTERVAL = 100   # seconds
+DEFAULT_DOMAIN_COUNT_PER_POST = 20  # number of detailed domain info packages to send per post
+DEFAULT_DOMAIN_POST_INTERVAL = 10  # seconds
 
 
 # Get a list of filenames for the providers and see which ones are appropriate:
@@ -54,9 +54,9 @@ def get_providers():
 
 def get_domains_info(get_domains, get_domain_info, queue_path=QUEUE_PATH, cleanup=False, show_progress=True,
                      cutoff_lines=100):
-    """Get domain info from the local Plesk server and store the data per domain in a file in `queue_path`.
+    """Get domain info from the local server and store the data per domain in a file in `queue_path`.
     From there, the data is periodically pushed to the Sitekick-server."""
-    # Get all domains from the local Plesk server:
+    # Get all domains from the local server:
     domains = get_domains() if callable(get_domains) else get_domains
     Path(queue_path).mkdir(parents=True, exist_ok=True)
     # Clear the queue location:
@@ -76,6 +76,15 @@ def get_domains_info(get_domains, get_domain_info, queue_path=QUEUE_PATH, cleanu
             for attempt in range(10):
                 try:
                     domain_info = get_domain_info(domain)
+                    meta = {
+                        'type': get_domain_info.__module__.split('.')[-1],
+                        'domain': domain,
+                        'hostname': hostname,
+                        'ip': ip_address,
+                        'timestamp': now(),
+                        'mac': mac_address
+                    }
+                    domain_info['meta'] = meta
                     break
                 except Exception as e:
                     print(
@@ -103,7 +112,7 @@ def get_domains_info(get_domains, get_domain_info, queue_path=QUEUE_PATH, cleanu
 
 # def push_domains_info(queue_path=QUEUE_PATH, count=DOMAIN_COUNT_PER_POST, interval=DOMAIN_POST_INTERVAL,
 #                       interval_offset=None, attempts=10):
-def push_domains_info(queue_path=QUEUE_PATH, count=DOMAIN_COUNT_PER_POST, interval=2,
+def push_domains_info(queue_path=QUEUE_PATH, count=DEFAULT_DOMAIN_COUNT_PER_POST, interval=2,
                       interval_offset=0, attempts=10):
     """Every `interval` seconds, get the files from the queue_path and push them to the Sitekick server.
     The `interval_offset` is used to start pushing after a certain number of seconds, when not specified, use the local
@@ -136,9 +145,8 @@ def push_domains_info(queue_path=QUEUE_PATH, count=DOMAIN_COUNT_PER_POST, interv
         # Now push the data to the Sitekick server, with a maximum `attempts` number of attempts:
         for attempt in range(attempts):
             req = Request(SITEKICK_PUSH_URL,
-                          method='POST', data=json.dumps(data).encode(),
-                          headers={'Authorization': f'Bearer {PLESK_COMMUNICATION_TOKEN}',
-                                   'Content-Type': 'application/json',
+                          method='POST', data=json.dumps({'data': data}).encode(),
+                          headers={'Content-Type': 'application/json',
                                    'Accept': 'application/json'})
             try:
                 response = urlopen(req)
@@ -191,15 +199,16 @@ def send_domains(domain_count_per_post=None, domain_post_interval=None, execute_
     # Now let the two functions (get_domains_info and push_domains_info) run for valid server modules:
     for module in get_server_modules():
         count = int(domain_count_per_post if domain_count_per_post is not None \
-            else getattr(module, 'DOMAIN_COUNT_PER_POST') or DOMAIN_COUNT_PER_POST)
+                        else getattr(module, 'DOMAIN_COUNT_PER_POST') or DEFAULT_DOMAIN_COUNT_PER_POST)
         interval = float(domain_post_interval if domain_post_interval is not None \
-            else getattr(module, 'DOMAIN_POST_INTERVAL') or DOMAIN_POST_INTERVAL)
+                             else getattr(module, 'DOMAIN_POST_INTERVAL') or DEFAULT_DOMAIN_POST_INTERVAL)
         push_kwargs = {'count': count, 'interval': interval}
         parallel = execute_parallel if execute_parallel is not None else getattr(module, 'EXECUTE_PARALLEL', True)
         if parallel:
             # Default: get domain info and send to sitekick server in parallel
             threads = [
-                threading.Thread(target=get_domains_info, args=(module.get_domains, module.get_domain_info), kwargs={'cutoff_lines': 1000000000}),
+                threading.Thread(target=get_domains_info, args=(module.get_domains, module.get_domain_info),
+                                 kwargs={'cutoff_lines': 1000000000}),
                 threading.Thread(target=push_domains_info, kwargs=push_kwargs)
             ]
             for thread in threads:
@@ -211,4 +220,3 @@ def send_domains(domain_count_per_post=None, domain_post_interval=None, execute_
             # Execute serially:
             get_domains_info(module.get_domains, module.get_domain_info)
             push_domains_info(**push_kwargs)
-
