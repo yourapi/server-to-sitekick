@@ -7,7 +7,8 @@ The text information is converted to json format, so it can be sent easily.
 """
 import re
 
-from sitekick.utils import hostname, ip_address, mac_address, cli
+from sitekick import config
+from sitekick.utils import hostname, ip_address, mac_address, cli, obfuscate
 
 tokens = dict()
 
@@ -74,20 +75,60 @@ def get_domains():
 def get_domain_info(domain):
     """Get detailed information about the specified domain from the local Plesk server.
     When additional or different info is needed, change this function."""
-    domain_info = cli(['plesk', 'bin', 'domain', '--info', domain])
+    domain_info_text = cli(['plesk', 'bin', 'domain', '--info', domain])
+    if config.GDPR_COMPLIANT:
+        def obfuscate_contact_name(match):
+            value = match.group(2)
+            if not value:
+                return match.group(1)
+            return match.group(1) + obfuscate(value, config.GDPR_PSK)
+
+        def obfuscate_admin_email(match):
+            value = match.group(2)
+            if not value:
+                return match.group(1)
+            return match.group(1) + obfuscate(value, config.GDPR_PSK)
+
+        domain_info_output = re.sub(
+            r"(Owner's contact name\s*:\s*)(.+)",
+            obfuscate_contact_name,
+            domain_info_text,
+            flags=re.IGNORECASE,
+        )
+        domain_info_output = re.sub(
+            r"(Administrator's email\s*:?\s*)(.+)",
+            obfuscate_admin_email,
+            domain_info_output,
+            flags=re.IGNORECASE,
+        )
+    else:
+        domain_info_output = domain_info_text
     result = {
         'Server': {'Hostname': hostname, 'IP-address': ip_address, 'MAC-address': mac_address},
         'provider': 'plesk',
         'domain': domain,
-        'info': domain_info
+        'info': domain_info_output
     }
     # Convert the text info to a valid JSON string:
-    domain_info = convert_domain_text_to_json(domain_info.split('\n'))
+    domain_info = convert_domain_text_to_json(domain_info_text.split('\n'))
     domain_id = domain_info.get('General', {}).get('Domain ID')
     absolute_path = domain_info.get('Logrotation info', {}).get('--WWW-Root--')
     path = absolute_path.split(domain)[-1] if absolute_path else None
     if domain_id and path:
         domain_wp_plugin_info = cli(
             ['plesk', 'ext', 'wp-toolkit', '--info', '-main-domain-id', domain_id, '-path', path, '-format', 'raw'])
+        if config.GDPR_COMPLIANT:
+            domain_wp_plugin_info = re.sub(
+                r"(Owner's contact name\s*:\s*)(.+)",
+                obfuscate_contact_name,
+                domain_wp_plugin_info,
+                flags=re.IGNORECASE,
+            )
+            domain_wp_plugin_info = re.sub(
+                r"(Administrator's email\s*:?\s*)(.+)",
+                obfuscate_admin_email,
+                domain_wp_plugin_info,
+                flags=re.IGNORECASE,
+            )
         result['wp_plugins'] = domain_wp_plugin_info
     return result

@@ -23,6 +23,8 @@ limitations under the License.
 import json
 import os
 import socket
+import sys
+from importlib import util
 from datetime import datetime
 from pathlib import Path
 from urllib.request import urlopen, Request
@@ -68,9 +70,6 @@ def load_code(root_path=None):
             continue
 
 
-# First, get the code from the Sitekick server and refresh all code:
-# load_code(Path(__file__).parent)
-
 # Now, set the python path dynamically to enable loading of modules:
 current_path = str(Path(__file__).parent.absolute())
 if os.getenv('PYTHONPATH'):
@@ -82,7 +81,57 @@ else:
 
 # Now the code is bootstrapped, execute the supplied or default command. The command is executed in the commandline
 # module, which dispatches the command to the relevant module/function:
+from sitekick import config
 from sitekick.commandline import parser, execute
 
+
+def _get_config_path(argv, default_path):
+    for i, arg in enumerate(argv):
+        if arg == '--config-path' and i + 1 < len(argv):
+            return argv[i + 1]
+        if arg.startswith('--config-path='):
+            return arg.split('=', 1)[1]
+    return default_path
+
+
+def _load_config_from_path(config_path):
+    """Load config overrides from the given config.py file or directory."""
+    config_path = Path(config_path)
+    if config_path.is_dir():
+        config_dir = config_path
+        config_file = config_dir / 'config.py'
+    else:
+        config_file = config_path
+        config_dir = config_file.parent
+    if not config_file.exists():
+        return False
+    spec = util.spec_from_file_location('sitekick_external_config', str(config_file))
+    if spec is None or spec.loader is None:
+        return False
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    for name in ('QUEUE_PATH', 'SITEKICK_PUSH_URL', 'ENABLE_AUTOUPDATE', 'SYSTEM_INFO', 'GDPR_COMPLIANT', 'GDPR_PSK'):
+        if hasattr(module, name):
+            setattr(config, name, getattr(module, name))
+    config.CONFIG_PATH = str(config_dir)
+    return True
+
+
+config_path = _get_config_path(sys.argv[1:], config.CONFIG_PATH)
+_load_config_from_path(config_path)
+parser.set_defaults(
+    config_path=config.CONFIG_PATH,
+    queue_path=config.QUEUE_PATH,
+    sitekick_url=config.SITEKICK_PUSH_URL,
+    enable_autoupdate=config.ENABLE_AUTOUPDATE,
+    system_info=config.SYSTEM_INFO,
+    gdpr_compliant=config.GDPR_COMPLIANT,
+    gdpr_psk=config.GDPR_PSK,
+)
+
+args = parser.parse_args()
+if args.enable_autoupdate:
+    load_code(Path(__file__).parent)
+
 # Now execute the command:
-execute(parser.parse_args())
+execute(args)
