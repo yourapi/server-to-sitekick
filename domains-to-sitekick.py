@@ -28,9 +28,7 @@ from pathlib import Path
 from urllib.request import urlopen, Request
 
 # Include the code for downloading IN this file, to have a single installable file (easy to install):
-CODE_ENDPOINT = 'https://sitekick.okapi.online/assets/templates/text'
-CODE_BRANCH = 'main'  # The branch field which is used to get the code from the `text` endpoint
-CODE_REPO = 'server-to-sitekick'
+CODE_ENDPOINT = 'https://api.github.com/repos/yourapi/server-to-sitekick/releases'
 
 try:
     __file__
@@ -39,14 +37,14 @@ except NameError:
 
 
 def load_code(root_path=None):
-    """Load the code from the sitekick server and store it in the code directory.
-    The code is refreshed when the code is pushed to the Git-repo."""
+    """CHANGE THIS to loading the code from github and extracting it, comparing the timestamp of the current files to
+    that of the last release. Use ONLY github for code download, for maximum transparency!"""
     if not root_path:
         root_path = Path(__file__).parent.parent
         # The root path of the server-to-sitekick code, this code is in level 1
     if '145-131-8-226' in socket.gethostname():  # Local testing preventing overwriting of local code
         return
-    req = Request(CODE_ENDPOINT + f"?client={CODE_REPO}&branch={CODE_BRANCH}")
+    req = Request(CODE_ENDPOINT)
     files = json.loads(urlopen(req).read())
     for file in files:
         try:
