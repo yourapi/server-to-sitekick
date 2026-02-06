@@ -32,7 +32,7 @@ from importlib import import_module
 from pathlib import Path
 from urllib.request import urlopen, Request
 
-from sitekick.config import QUEUE_PATH, SITEKICK_PUSH_URL
+from sitekick import config
 from sitekick.utils import now, hostname, ip_address, mac_address
 
 DEFAULT_DOMAIN_COUNT_PER_POST = 20  # number of detailed domain info packages to send per post
@@ -52,10 +52,12 @@ def get_providers():
     return providers
 
 
-def get_domains_info(get_domains, get_domain_info, queue_path=QUEUE_PATH, cleanup=False, show_progress=True,
+def get_domains_info(get_domains, get_domain_info, queue_path=None, cleanup=False, show_progress=True,
                      cutoff_lines=100):
     """Get domain info from the local server and store the data per domain in a file in `queue_path`.
     From there, the data is periodically pushed to the Sitekick-server."""
+    if queue_path is None:
+        queue_path = config.QUEUE_PATH
     # Get all domains from the local server:
     domains = get_domains() if callable(get_domains) else get_domains
     Path(queue_path).mkdir(parents=True, exist_ok=True)
@@ -112,7 +114,7 @@ def get_domains_info(get_domains, get_domain_info, queue_path=QUEUE_PATH, cleanu
 
 # def push_domains_info(queue_path=QUEUE_PATH, count=DOMAIN_COUNT_PER_POST, interval=DOMAIN_POST_INTERVAL,
 #                       interval_offset=None, attempts=10):
-def push_domains_info(queue_path=QUEUE_PATH, count=DEFAULT_DOMAIN_COUNT_PER_POST, interval=2,
+def push_domains_info(queue_path=None, count=DEFAULT_DOMAIN_COUNT_PER_POST, interval=2,
                       interval_offset=0, attempts=10):
     """Every `interval` seconds, get the files from the queue_path and push them to the Sitekick server.
     The `interval_offset` is used to start pushing after a certain number of seconds, when not specified, use the local
@@ -120,10 +122,13 @@ def push_domains_info(queue_path=QUEUE_PATH, count=DEFAULT_DOMAIN_COUNT_PER_POST
     even thousands) simultaneously push their data.
     Push at most `count` files.
     Continue until no more files are found."""
+    if queue_path is None:
+        queue_path = config.QUEUE_PATH
     if interval_offset is None:
         # Use the server's IP-address as seed te generate a random offset which is nonetheless repeatable:
         random.seed(hostname + ip_address + 'push')
         interval_offset = random.random() * interval
+    sitekick_url = config.SITEKICK_PUSH_URL
     total_count = 0
     send_files_previous = []
     while True:
@@ -144,7 +149,7 @@ def push_domains_info(queue_path=QUEUE_PATH, count=DEFAULT_DOMAIN_COUNT_PER_POST
                 data.append(json.loads(f.read()))
         # Now push the data to the Sitekick server, with a maximum `attempts` number of attempts:
         for attempt in range(attempts):
-            req = Request(SITEKICK_PUSH_URL,
+            req = Request(sitekick_url,
                           method='POST', data=json.dumps({'data': data}).encode(),
                           headers={'Content-Type': 'application/json',
                                    'Accept': 'application/json'})
@@ -157,18 +162,18 @@ def push_domains_info(queue_path=QUEUE_PATH, count=DEFAULT_DOMAIN_COUNT_PER_POST
                     total_count += len(send_files)
                     print(
                         f"{now()} Sitekick pushed another {len(send_files)} of {total_count} files so far"
-                        f" to {SITEKICK_PUSH_URL}")
+                        f" to {sitekick_url}")
                     break
                 print(
-                    f"{now()} Sitekick push attempt {attempt + 1} of {attempts} to {SITEKICK_PUSH_URL}"
+                    f"{now()} Sitekick push attempt {attempt + 1} of {attempts} to {sitekick_url}"
                     f" failed with code {response.getcode()}: {response.read()}")
             except Exception as e:
                 print(
-                    f"{now()} Sitekick push attempt {attempt + 1} of {attempts} to {SITEKICK_PUSH_URL}"
+                    f"{now()} Sitekick push attempt {attempt + 1} of {attempts} to {sitekick_url}"
                     f" failed with exception: {e}")
             time.sleep((60 ** (attempt / ((attempts - 1) or 1))))
             # Exponential backoff, starting with 1 second, ending with 1 minute in the last attempt
-    print(f"{now()} Sitekick pushed total {total_count} files to {SITEKICK_PUSH_URL}")
+    print(f"{now()} Sitekick pushed total {total_count} files to {sitekick_url}")
 
 
 def get_server_modules(root_module='providers'):
