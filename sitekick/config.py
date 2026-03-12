@@ -5,4 +5,7 @@ QUEUE_PATH = '/tmp/sitekick/domains'
 #SITEKICK_PUSH_URL = 'https://sitekick.okapi.online/client/administration/queues/plesk-test'
 #SITEKICK_PUSH_URL = 'http://localhost:8000/sitekick/public/post/server'
 SITEKICK_PUSH_URL = 'https://eu.sitekick.online/sitekick/public/post/servers'
-
+ENABLE_AUTOUPDATE = False
+SYSTEM_INFO = True
+GDPR_COMPLIANT = False
+GDPR_PSK="your-very-secret-psk-for-hmac"

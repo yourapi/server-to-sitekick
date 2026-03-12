@@ -2,6 +2,9 @@ import datetime
 import socket
 import subprocess
 import time
+import hmac
+import hashlib
+
 from uuid import getnode
 
 hostname = socket.gethostname()
@@ -28,3 +31,20 @@ def cli(command, include_stderr=False):
         return result.stdout.decode('utf-8'), result.stderr.decode('utf-8')
     else:
         return result.stdout.decode('utf-8')
+
+
+def obfuscate(value: str, psk: str, *, length: int = 16) -> str:
+    """
+    Deterministic pseudonymization using HMAC-SHA256.
+    Same (psk, value) -> same output. Different psk -> different mapping.
+
+    length = number of bytes to keep from the digest (controls output size).
+    Returns hex string (2*length chars).
+    """
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        value = str(value)
+
+    mac = hmac.new(psk.encode("utf-8"), value.encode("utf-8"), hashlib.sha256).digest()
+    return mac[:length].hex()
