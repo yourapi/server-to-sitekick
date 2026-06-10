@@ -1,10 +1,8 @@
 import datetime
+import hashlib
+import hmac
 import socket
 import subprocess
-import time
-import hmac
-import hashlib
-
 from uuid import getnode
 
 hostname = socket.gethostname()
@@ -17,6 +15,7 @@ except:
 
 def now():
     return datetime.datetime.now().astimezone().isoformat()
+
 
 def cli(command, include_stderr=False):
     """Execute the specified command as the current user from the command line interface (cli). Specify the command as

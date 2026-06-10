@@ -76,6 +76,8 @@ def get_domain_info(domain):
     """Get detailed information about the specified domain from the local Plesk server.
     When additional or different info is needed, change this function."""
     domain_info_text = cli(['plesk', 'bin', 'domain', '--info', domain])
+    # Add plesk info, quite ad hoc!!!
+    domain_php_info = cli(['plesk', 'db', '-sNe', "SELECT d.name, h.php_handler_id FROM domains d JOIN hosting h ON h.dom_id=d.id WHERE d.name='" + domain + "'"])
     if config.GDPR_COMPLIANT:
         def obfuscate_contact_name(match):
             value = match.group(2)
@@ -132,3 +134,7 @@ def get_domain_info(domain):
             )
         result['wp_plugins'] = domain_wp_plugin_info
     return result
+
+
+if __name__ == '__main__':
+    print(convert_domain_text_to_json(['claudiadebreij.nl       plesk-php80-fpm', '']))
