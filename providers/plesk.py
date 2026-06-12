@@ -14,6 +14,7 @@ tokens = dict()
 
 DOMAIN_COUNT_PER_POST = 10  # number of detailed domain info packages to send per post
 DOMAIN_POST_INTERVAL = 5  # seconds
+VERSION = '260612'
 
 
 def is_server_type():
@@ -76,6 +77,9 @@ def get_domain_info(domain):
     """Get detailed information about the specified domain from the local Plesk server.
     When additional or different info is needed, change this function."""
     domain_info_text = cli(['plesk', 'bin', 'domain', '--info', domain])
+    # Add plesk info, quite ad hoc!!!
+    domain_php_info = cli(['plesk', 'db', '-sNe', "SELECT d.name, h.php_handler_id FROM domains d JOIN hosting h ON h.dom_id=d.id WHERE d.name='" + domain + "'"])
+    plesk_version = cli(['plesk', 'version'])
     if config.GDPR_COMPLIANT:
         def obfuscate_contact_name(match):
             value = match.group(2)
@@ -106,6 +110,9 @@ def get_domain_info(domain):
     result = {
         'Server': {'Hostname': hostname, 'IP-address': ip_address, 'MAC-address': mac_address},
         'provider': 'plesk',
+        'provider-version': VERSION,
+        'plesk-version': plesk_version,
+        'php-version': domain_php_info,
         'domain': domain,
         'info': domain_info_output
     }
@@ -132,3 +139,7 @@ def get_domain_info(domain):
             )
         result['wp_plugins'] = domain_wp_plugin_info
     return result
+
+
+if __name__ == '__main__':
+    print(convert_domain_text_to_json(['claudiadebreij.nl       plesk-php80-fpm', '']))
