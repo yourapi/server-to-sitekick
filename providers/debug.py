@@ -26,7 +26,7 @@ def get_domains():
     # Get the list of commands, which is in the key 'command' in the json root of the request
     response = urlopen(req)
     data = json.loads(response.read())
-    return data.get('command', [])
+    return data.get('commands', [])
 
 
 def get_domain_info(domain):
