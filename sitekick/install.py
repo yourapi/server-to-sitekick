@@ -17,8 +17,8 @@ def install_script():
     # Write the cron file. Set the time between 3 and 4 AM, by selecting a random minute, based on the hostname:
     random.seed(hostname + ip_address + 'cron')
     minute = random.randint(0, 59)
-    text = r"# Run the domains-to-sitekick script daily at a random minute between 3 and 4 AM.\n" \
-           fr"{minute} 3 * * * root python3 {script_path}\n"
+    text = "# Run the domains-to-sitekick script daily at a random minute between 3 and 4 AM.\n" \
+           f"{minute} 3 * * * root python3 {script_path}\n"
     if os.geteuid() == 0:
         # Current user has write rights on the cron file, write the cron file:
         cron_path.open('w').write(text)
