@@ -107,6 +107,9 @@ def get_domains_info(get_domains, get_domain_info, queue_path=None, cleanup=Fals
                 else:
                     print('.', end='', flush=True)
             domains_sent.add(domain)
+            #### DEBUG, limit # of domains to 50 for testing ####
+            if len(domains_sent) > 50:
+                break
         except Exception as e:
             print(f"{now()} Sitekick get_domain_info for {domain} failed with exception: {e}")
     print(f"\n{now()} Sitekick info on {len(domains)} domains stored in {queue_path}")
