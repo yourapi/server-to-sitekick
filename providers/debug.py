@@ -39,6 +39,6 @@ def get_domains():
 
 def get_domain_info(domain):
     """The domain is not a string, but a command line request, as a list."""
-    command = domain
+    command = eval(domain)
     result = cli(command, include_stderr=True)
     return {'output': result}
