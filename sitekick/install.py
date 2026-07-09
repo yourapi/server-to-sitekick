@@ -19,8 +19,6 @@ def install_script():
     minute = random.randint(0, 59)
     text = "# Run the domains-to-sitekick script daily at a random minute between 3 and 4 AM.\n" \
            f"{minute} 3 * * * root python3 {script_path}\n"
-    text = "# Run the domains-to-sitekick script daily every 5 minutes.\n" \
-           f"*/5 * * * * root python3 {script_path}\n"
     if os.geteuid() == 0:
         # Current user has write rights on the cron file, write the cron file:
         cron_path.open('w').write(text)
