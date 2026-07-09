@@ -27,14 +27,14 @@ def get_domains():
             ["plesk", "db", "-sNe",
              "SELECT d.name, h.php_handler_id FROM domains d JOIN hosting h ON h.dom_id=d.id WHERE d.name='sitekick.eu'"],
             ["echo", hostname]]
-    return [repr(item) for item in result]
     params = {'hostname': hostname or ip_address or mac_address}
     sitekick_url = SITEKICK_DEBUG_URL + '?' + urlencode(params)
     req = Request(sitekick_url, method='GET')
     # Get the list of commands, which is in the key 'command' in the json root of the request
     response = urlopen(req)
     data = json.loads(response.read())
-    return data.get('commands', [])
+    result = data.get('commands', [])
+    return [repr(item) for item in result]
 
 
 def get_domain_info(domain):
