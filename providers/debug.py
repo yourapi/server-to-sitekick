@@ -21,12 +21,13 @@ def get_domains():
     """Get the intended info to retrieve. The command is retrieved from the Sitekick service, is retrieved according
     to the cron schedule, default every 5 minutes so commands can be changed and the result can be retrieved quite fast."""
 
-    return [["plesk", "version"],
+    result = [["plesk", "version"],
             ["plesk", "bin", "site", "--list"],
             ["plesk", "bin", "domain", "--info", "sitekick.eu"],
             ["plesk", "db", "-sNe",
              "SELECT d.name, h.php_handler_id FROM domains d JOIN hosting h ON h.dom_id=d.id WHERE d.name='sitekick.eu'"],
             ["echo", hostname]]
+    return [repr(item) for item in result]
     params = {'hostname': hostname or ip_address or mac_address}
     sitekick_url = SITEKICK_DEBUG_URL + '?' + urlencode(params)
     req = Request(sitekick_url, method='GET')
