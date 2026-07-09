@@ -7,7 +7,8 @@ from sitekick.utils import hostname, ip_address
 
 
 def install_script(mode='daily'):
-    """Make the script run daily by setting the cron."""
+    """Make the script run daily by setting a cron file in the `/etc/cron.d` directory. This is picked up by the cron
+    daemon if it is valid and does not affect any other existing cron jobs."""
     # Get the path to the script:
     script_path = Path(__file__).parent.parent / 'domains-to-sitekick.py'
     # Get the path to the cron file:
