@@ -20,6 +20,7 @@ VERSION = '260612'
 def is_server_type():
     """Get the server information from the command line. If the api is not available, it raises an exception so this provider
     is not used."""
+    return False
     result = cli(['plesk', 'version'])
     return re.search(r'version.*\d+\.\d+', result, re.I + re.DOTALL)
 
