@@ -13,7 +13,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('command', action='store', nargs='?', default='send', help='Command to execute',
                     choices=['send', 'install', 'test'])
 parser.add_argument('args', action='store', nargs='*', help='Arguments for the specified command')
-parser.add_argument('--version', action='version', version='%(prog)s 0.1')
+parser.add_argument('--version', action='version', version='%(prog)s 0.2')
 parser.add_argument('--config-path', default=config.CONFIG_PATH, 
                     help=f'Path to configuration directory (default: {config.CONFIG_PATH})')
 parser.add_argument('--queue-path', default=config.QUEUE_PATH,
@@ -48,7 +48,11 @@ def test(*args):
 
 def install(*args):
     """Make the send-domains-to-sitekick script regularly executable, by setting the cron."""
-    install_script()
+    install_script(*args)
+
+def debug(*args):
+    """Debug the send-domains-to-sitekick script."""
+    debug(*args)
 
 def execute(args):
     """Execute the specified command."""
