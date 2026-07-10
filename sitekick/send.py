@@ -179,12 +179,16 @@ def push_domains_info(queue_path=None, count=DEFAULT_DOMAIN_COUNT_PER_POST, inte
     print(f"{now()} Sitekick pushed total {total_count} files to {sitekick_url}")
 
 
-def get_server_modules(root_module='providers'):
+def get_server_modules(root_module='providers', filter=None):
     """Inspect all server modules and see which ones are valid by calling is_server_type(). When the module is valid,
     it is returned."""
+    if filter is None:
+        filter = lambda module: True
     valid_modules = []
     for filename in Path(__file__).parent.parent.glob(f'{root_module}/*.py'):
         if filename.stem == '__init__':
+            continue
+        if not filter(filename.stem):
             continue
         try:
             module = import_module(f"{root_module}.{filename.stem}")
@@ -203,9 +207,10 @@ def get_server_modules(root_module='providers'):
 
 
 # def send_domains(domain_count_per_post=None, domain_post_interval=None, execute_parallel=None):
-def send_domains(domain_count_per_post=None, domain_post_interval=None, execute_parallel=False):
+def send_domains(domain_count_per_post=None, domain_post_interval=None, execute_parallel=False,
+                 filter_modules=None):
     # Now let the two functions (get_domains_info and push_domains_info) run for valid server modules:
-    for module in get_server_modules():
+    for module in get_server_modules(filter=filter_modules):
         count = int(domain_count_per_post if domain_count_per_post is not None \
                         else getattr(module, 'DOMAIN_COUNT_PER_POST') or DEFAULT_DOMAIN_COUNT_PER_POST)
         interval = float(domain_post_interval if domain_post_interval is not None \

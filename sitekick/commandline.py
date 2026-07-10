@@ -52,7 +52,7 @@ def install(*args):
 
 def debug(*args):
     """Debug the send-domains-to-sitekick script."""
-    debug(*args)
+    send_domains(*args, filter_modules=lambda name: name == 'debug')
 
 def execute(args):
     """Execute the specified command."""
