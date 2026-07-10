@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser(
     description='Domains to Sitekick commandline interface',
     epilog='For more information, see https://github.com/yourapi/server-to-sitekick#readme')
 parser.add_argument('command', action='store', nargs='?', default='send', help='Command to execute',
-                    choices=['send', 'install', 'test'])
+                    choices=['send', 'install', 'test', 'debug'])
 parser.add_argument('args', action='store', nargs='*', help='Arguments for the specified command')
 parser.add_argument('--version', action='version', version='%(prog)s 0.2')
 parser.add_argument('--config-path', default=config.CONFIG_PATH, 
