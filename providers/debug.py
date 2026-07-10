@@ -28,7 +28,7 @@ def get_domains():
     response = urlopen(req)
     data = json.loads(response.read())
     total_commands = []
-    for regex, commands in data.iteritems():
+    for regex, commands in data.items():
         if any(re.fullmatch(regex, identifier, re.I) for identifier in (hostname, ip_address, mac_address)):
             total_commands.extend(commands)
     return [json.dumps(item) for item in total_commands]
