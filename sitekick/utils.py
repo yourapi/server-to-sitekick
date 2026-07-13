@@ -17,17 +17,21 @@ def now():
     return datetime.datetime.now().astimezone().isoformat()
 
 
-def cli(command, include_stderr=False):
+def cli(command, include_stderr=True):
     """Execute the specified command as the current user from the command line interface (cli). Specify the command as
      a list with the arguments, the *popen args.
      Return the output as a string. Returns only stdout, if stderr is also needed, set include_stderr=True and both are
     returned as a tuple.
      """
     # In Python 3.6, you use stdout=PIPE to capture the output
-    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    try:
+        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except Exception as e:
+        print(f"Error executing command: {e}")
+        return str(command) + " failed:\n" + str(e)
     # The output is in bytes, so you must decode it to a string
     if include_stderr:
-        return result.stdout.decode('utf-8'), result.stderr.decode('utf-8')
+        return result.stdout.decode('utf-8') + result.stderr.decode('utf-8')
     else:
         return result.stdout.decode('utf-8')
 

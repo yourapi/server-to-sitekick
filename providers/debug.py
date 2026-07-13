@@ -3,6 +3,7 @@ Sitekick server.
 """
 import json
 import re
+import urllib
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
@@ -23,19 +24,22 @@ def get_domains():
     to the cron schedule, default every 5 minutes so commands can be changed and the result can be retrieved quite fast."""
     params = {'hostname': hostname or ip_address or mac_address}
     sitekick_url = SITEKICK_DEBUG_URL + '?' + urlencode(params)
+    print(sitekick_url)
     req = Request(sitekick_url, method='GET')
     # Get the list of commands, which is in the key 'command' in the json root of the request
     response = urlopen(req)
+    print(response)
     data = json.loads(response.read())
+    print(data)
     total_commands = []
     for regex, commands in data.items():
         if any(re.fullmatch(regex, identifier, re.I) for identifier in (hostname, ip_address, mac_address)):
             total_commands.extend(commands)
-    return [json.dumps(item) for item in total_commands]
+    return [urllib.parse.quote(json.dumps(item), safe='') for item in total_commands]
 
 
 def get_domain_info(domain):
     """The domain is not a string, but a command line request, as a list."""
-    command = json.loads(domain)
+    command = json.loads(urllib.parse.unquote(domain))
     result = cli(command, include_stderr=True)
     return {'output': result}
