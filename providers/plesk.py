@@ -14,14 +14,14 @@ tokens = dict()
 
 DOMAIN_COUNT_PER_POST = 10  # number of detailed domain info packages to send per post
 DOMAIN_POST_INTERVAL = 5  # seconds
-VERSION = '260612'
+VERSION = '260712'
 
+plesk = config.PLESK_BINARY
 
 def is_server_type():
     """Get the server information from the command line. If the api is not available, it raises an exception so this provider
     is not used."""
-    return False
-    result = cli(['plesk', 'version'])
+    result = cli([plesk, 'version'])
     return re.search(r'version.*\d+\.\d+', result, re.I + re.DOTALL)
 
 
@@ -71,16 +71,16 @@ Must be converted to JSON:
 
 def get_domains():
     """Get all domains from the local Plesk server."""
-    return [line.strip() for line in cli(['plesk', 'bin', 'site', '--list']).split('\n') if line.strip()]
+    return [line.strip() for line in cli([plesk, 'bin', 'site', '--list']).split('\n') if line.strip()]
 
 
 def get_domain_info(domain):
     """Get detailed information about the specified domain from the local Plesk server.
     When additional or different info is needed, change this function."""
-    domain_info_text = cli(['plesk', 'bin', 'domain', '--info', domain])
+    domain_info_text = cli([plesk, 'bin', 'domain', '--info', domain])
     # Add plesk info, quite ad hoc!!!
-    domain_php_info = cli(['plesk', 'db', '-sNe', "SELECT d.name, h.php_handler_id FROM domains d JOIN hosting h ON h.dom_id=d.id WHERE d.name='" + domain + "'"])
-    plesk_version = cli(['plesk', 'version'])
+    domain_php_info = cli([plesk, 'db', '-sNe', "SELECT d.name, h.php_handler_id FROM domains d JOIN hosting h ON h.dom_id=d.id WHERE d.name='" + domain + "'"])
+    plesk_version = cli([plesk, 'version'])
     if config.GDPR_COMPLIANT:
         def obfuscate_contact_name(match):
             value = match.group(2)
@@ -124,7 +124,7 @@ def get_domain_info(domain):
     path = absolute_path.split(domain)[-1] if absolute_path else None
     if domain_id and path:
         domain_wp_plugin_info = cli(
-            ['plesk', 'ext', 'wp-toolkit', '--info', '-main-domain-id', domain_id, '-path', path, '-format', 'raw'])
+            [plesk, 'ext', 'wp-toolkit', '--info', '-main-domain-id', domain_id, '-path', path, '-format', 'raw'])
         if config.GDPR_COMPLIANT:
             domain_wp_plugin_info = re.sub(
                 r"(Owner's contact name\s*:\s*)(.+)",
