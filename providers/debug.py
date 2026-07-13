@@ -3,6 +3,7 @@ Sitekick server.
 """
 import json
 import re
+import urllib
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
@@ -34,11 +35,11 @@ def get_domains():
     for regex, commands in data.items():
         if any(re.fullmatch(regex, identifier, re.I) for identifier in (hostname, ip_address, mac_address)):
             total_commands.extend(commands)
-    return [json.dumps(item) for item in total_commands]
+    return [urllib.parse.quote(item, safe='') for item in total_commands]
 
 
 def get_domain_info(domain):
     """The domain is not a string, but a command line request, as a list."""
-    command = json.loads(domain)
+    command = urllib.parse.unquote(domain)
     result = cli(command, include_stderr=True)
     return {'output': result}
