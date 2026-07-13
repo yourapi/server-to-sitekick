@@ -23,10 +23,13 @@ def get_domains():
     to the cron schedule, default every 5 minutes so commands can be changed and the result can be retrieved quite fast."""
     params = {'hostname': hostname or ip_address or mac_address}
     sitekick_url = SITEKICK_DEBUG_URL + '?' + urlencode(params)
+    print(sitekick_url)
     req = Request(sitekick_url, method='GET')
     # Get the list of commands, which is in the key 'command' in the json root of the request
     response = urlopen(req)
+    print(response)
     data = json.loads(response.read())
+    print(data)
     total_commands = []
     for regex, commands in data.items():
         if any(re.fullmatch(regex, identifier, re.I) for identifier in (hostname, ip_address, mac_address)):
