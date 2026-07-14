@@ -8,3 +8,4 @@ ENABLE_AUTOUPDATE = False
 SYSTEM_INFO = True
 GDPR_COMPLIANT = False
 GDPR_PSK="your-very-secret-psk-for-hmac"
+PLESK_BINARY = '/usr/sbin/plesk'
