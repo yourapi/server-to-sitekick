@@ -16,7 +16,7 @@ DOMAIN_COUNT_PER_POST = 10  # number of detailed domain info packages to send pe
 DOMAIN_POST_INTERVAL = 5  # seconds
 VERSION = '260712'
 
-plesk = cli(['which', 'plesk']).strip()
+plesk = cli(['which', 'plesk1']).strip()
 print(f"=======++++++++======++++++ which plesk: {plesk}")
 if not plesk or ' ' in plesk:  # When no result, or some error which always contains at least one space.
     print(f"======= plesk not found, using config.PLESK_BINARY: {config.PLESK_BINARY}")
