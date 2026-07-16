@@ -17,7 +17,9 @@ DOMAIN_POST_INTERVAL = 5  # seconds
 VERSION = '260712'
 
 plesk = cli(['which', 'plesk']).strip()
+print(f"======= which plesk: {plesk}")
 if not plesk or ' ' in plesk:  # When no result, or some error which always contains at least one space.
+    print(f"======= plesk not found, using config.PLESK_BINARY: {config.PLESK_BINARY}")
     plesk = config.PLESK_BINARY
 
 def is_server_type():
