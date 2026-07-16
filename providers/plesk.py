@@ -16,7 +16,9 @@ DOMAIN_COUNT_PER_POST = 10  # number of detailed domain info packages to send pe
 DOMAIN_POST_INTERVAL = 5  # seconds
 VERSION = '260712'
 
-plesk = config.PLESK_BINARY
+plesk = cli(['which', 'plesk']).strip()
+if not plesk or ' ' in plesk:  # When no result, or some error which always contains at least one space.
+    plesk = config.PLESK_BINARY
 
 def is_server_type():
     """Get the server information from the command line. If the api is not available, it raises an exception so this provider
