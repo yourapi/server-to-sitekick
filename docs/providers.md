@@ -58,7 +58,7 @@ this run; see [Data sent to Sitekick](data.md#the-request) for the retries.
 
 - Define `DOMAIN_COUNT_PER_POST` and `DOMAIN_POST_INTERVAL` in every provider, as the template does: the `send`
   command reads both from the module and needs them to be present. A value of `None` selects the default.
-- `send` and `debug` run collection and push one after the other, for every provider, whatever the value of
+- `send` runs collection and push one after the other, for every provider, whatever the value of
   `EXECUTE_PARALLEL`.
 
 ## Helpers

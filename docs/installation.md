@@ -15,9 +15,9 @@ once by hand, schedule it with cron and check that the data arrives.
 - **Root access.** `install` writes the cron file `/etc/cron.d/domains-to-sitekick` and must run as root. The
   `plesk` command-line tool also needs root, so run `test plesk` and `send` as root on a Plesk server; the cron job
   runs as root.
-- **Outgoing HTTPS** from the server to the hosts of the push URL (`SITEKICK_PUSH_URL`, or the URL you configure) and
-  of the debug URL (`SITEKICK_DEBUG_URL`). Both defaults are set in `sitekick/config.py`; the `debug` provider
-  contacts the debug URL on every run (see [Diagnostic mode](index.md#diagnostic-mode)).
+- **Outgoing HTTPS** from the server to the host of the push URL (`SITEKICK_PUSH_URL` in `sitekick/config.py`, or
+  the URL you configure). The push is the only outgoing traffic of the script; only with `--enable-autoupdate`, which
+  is designed for automatic updates and off by default, does it also contact GitHub.
 - **A host name that resolves to the public IP address of the server.** The script takes the IP address it sends
   from the host name of the server; when the host name resolves to a loopback address, that address is sent instead.
 
@@ -128,28 +128,8 @@ and 04:00, server time:
 - The line contains the full path of the script. If you move the code, run `install` again.
 - Options that you pass to `install` are not copied into the cron line. Settings that the daily run needs belong in
   the [configuration file](#configuration-file).
-
-### Diagnostic mode
-
-The `debug` provider runs with every `send`, also in the daily run: it retrieves the diagnostic commands that the
-Sitekick operator lists for this server, runs them with the privileges of the script (root under cron) and sends
-their output (see [Diagnostic mode](index.md#diagnostic-mode)). On request of the Sitekick operator you can also
-schedule the `debug` command, which runs this provider alone, every 5 minutes:
-
-```bash
-python3 /usr/local/src/server-to-sitekick/domains-to-sitekick.py install debug
-```
-
-This writes the same cron file with a run of the `debug` command every 5 minutes:
-
-```text
-# Debug the domains-to-sitekick script every 5 minutes.
-*/5 * * * * root python3 /usr/local/src/server-to-sitekick/domains-to-sitekick.py debug
-```
-
-Because both modes use the same file, `install debug` replaces the daily schedule. To stop the 5-minute runs, run
-`install` again: it rewrites the cron file to the daily line. See also
-[Commands and configuration](usage.md#debug).
+- `install` replaces the cron file as a whole. On a server that ran an earlier version with a line that runs every 5
+  minutes in `/etc/cron.d/domains-to-sitekick`, run `install` again to restore the daily schedule.
 
 ## Verify that data arrives
 
