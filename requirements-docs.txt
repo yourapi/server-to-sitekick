@@ -1,0 +1,4 @@
+# Documentation build (MkDocs Material). Install with: uv pip install -r requirements-docs.txt
+mkdocs==1.6.1
+mkdocs-material==9.8.2
+pymdown-extensions==13.1.2
