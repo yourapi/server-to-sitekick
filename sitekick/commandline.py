@@ -20,8 +20,6 @@ parser.add_argument('--queue-path', default=config.QUEUE_PATH,
                     help=f'Path to queue directory (default: {config.QUEUE_PATH})')
 parser.add_argument('--sitekick-url', default=config.SITEKICK_PUSH_URL,
                     help=f'Sitekick push URL (default: {config.SITEKICK_PUSH_URL})')
-parser.add_argument('--enable-autoupdate', action='store_true', default=config.ENABLE_AUTOUPDATE,
-                    help='Enable automatic updates (default: disabled)')
 gdpr_group = parser.add_mutually_exclusive_group()
 gdpr_group.add_argument('--gdpr-compliant', dest='gdpr_compliant', action='store_true',
                         help='Enable GDPR compliant behavior (default: disabled)')
@@ -55,7 +53,6 @@ def execute(args):
     config.CONFIG_PATH = args.config_path
     config.QUEUE_PATH = args.queue_path
     config.SITEKICK_PUSH_URL = args.sitekick_url
-    config.ENABLE_AUTOUPDATE = args.enable_autoupdate
     config.SYSTEM_INFO = args.system_info
     config.GDPR_COMPLIANT = args.gdpr_compliant
     config.GDPR_PSK = args.gdpr_psk

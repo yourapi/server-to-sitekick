@@ -62,7 +62,6 @@ Run `test plesk` as root on a Plesk server, because the `plesk` tool needs root.
 | `--system-info`, `--no-system-info` | Off | Add the output of `uptime`, `free`, `df` and `lscpu` to the `server` record |
 | `--gdpr-compliant`, `--no-gdpr-compliant` | Off | Pseudonymise the owner contact name and the administrator email in the Plesk output, see [Privacy](data.md#privacy) |
 | `--gdpr-psk KEY` | A placeholder value in `sitekick/config.py` | Pre-shared key for the pseudonyms; set your own and keep it secret |
-| `--enable-autoupdate` | Off | Designed for automatic updates of the code from the public repository |
 | `--version` | | Print the version and stop |
 | `-h`, `--help` | | Print the help and stop |
 
@@ -87,7 +86,6 @@ The file is Python. The script executes it and takes these names from it; other 
 | `SYSTEM_INFO` | bool | `--system-info` / `--no-system-info` |
 | `GDPR_COMPLIANT` | bool | `--gdpr-compliant` / `--no-gdpr-compliant` |
 | `GDPR_PSK` | str | `--gdpr-psk` |
-| `ENABLE_AUTOUPDATE` | bool | `--enable-autoupdate` |
 
 **Precedence.** The built-in defaults in `sitekick/config.py` come first. Values in the configuration file replace
 them and become the defaults of the options. An option given on the command line replaces both.

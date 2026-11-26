@@ -24,7 +24,7 @@ pytest -q
 - a configuration file is read from a directory and from a file path, and its values become the defaults of the
   options;
 - an option on the command line takes precedence over the configuration file;
-- the automatic-update setting: no network request for updates is made when it is off.
+- the commands and options that no longer exist, `debug` and `--enable-autoupdate`, are rejected.
 
 `tests/conftest.py` puts the root of the repository on the Python path, so the tests import `sitekick` and
 `providers` directly.
