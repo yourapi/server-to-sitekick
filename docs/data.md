@@ -5,7 +5,7 @@ title: Data sent to Sitekick
 # Data sent to Sitekick
 
 This page describes exactly what the script sends: the HTTP request, the `meta` block that every record carries, and
-the records of the `plesk`, `server` and `debug` providers. Use `test` to see the records of your own server before
+the records of the `plesk` and `server` providers. Use `test` to see the records of your own server before
 you send them (see [Commands and configuration](usage.md#test)).
 
 ## The request
@@ -33,7 +33,6 @@ The files are sent in name order.
 |---|---|---|
 | `plesk` | 10 | 5 seconds |
 | `server` | 10 | 1 second |
-| `debug` | 10 | 1 second |
 | `template` | 10 | 1 second |
 | `test_body` | 20 | 1 second |
 
@@ -57,8 +56,8 @@ The script adds a `meta` block to every record. A key `meta` that the provider r
 
 | Field | Value |
 |---|---|
-| `type` | The name of the provider module: `plesk`, `server` or `debug` |
-| `domain` | The key of the record: the domain name for `plesk`, the IP address of the server for `server`, an encoded form of the command for `debug` |
+| `type` | The name of the provider module, such as `plesk` or `server` |
+| `domain` | The key of the record: the domain name for `plesk`, the IP address of the server for `server` |
 | `hostname` | The host name of the server |
 | `ip` | The IP address that the host name of the server resolves to |
 | `timestamp` | The moment of collection, in ISO 8601 with the local UTC offset, such as `2026-11-26T03:17:05.123456+01:00` |
@@ -100,16 +99,6 @@ The `server` provider sends one record per run, keyed by the IP address of the s
 | `hostname`, `ip`, `mac` | The identity of the server, as in `meta` |
 | `now` | The moment of collection, in the same format as `meta.timestamp` |
 | `uptime`, `free`, `df`, `lscpu` | The text output of these commands; only with system information enabled (`--system-info` or `SYSTEM_INFO = True`, off by default) |
-
-## Debug record
-
-The `debug` provider applies to every server, so every run of `send`, including the daily cron run, also retrieves
-the diagnostic commands that the Sitekick operator lists for this server, runs them with the privileges of the script
-(root under cron) and sends one record per command, with one field:
-
-| Field | Content |
-|---|---|
-| `output` | The standard output and standard error of the command, as text |
 
 ## Example
 
@@ -188,8 +177,8 @@ bytes and written as 32 hexadecimal characters.
 - **Leave out the system information**: it is off by default; `--no-system-info` turns it off for a run when the
   configuration file turns it on.
 - **Remove a provider module** that you do not want to run. The script loads every provider from the `providers/`
-  directory, so a module that is not there does not run; for example, removing `providers/debug.py` stops the
-  diagnostic commands. Repeat the removal after an update that brings the file back.
+  directory, so a module that is not there does not run; for example, removing `providers/server.py` stops the
+  server record. Repeat the removal after an update that brings the file back.
 
 ### Storage, retention and deletion
 

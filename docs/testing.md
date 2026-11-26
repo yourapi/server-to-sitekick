@@ -33,7 +33,7 @@ pytest -q
 
 `python3 domains-to-sitekick.py test plesk` prints what a provider produces, even on a machine where the provider
 does not apply; it does not queue or push records. Run it before the first `send`, and see
-[Commands and configuration](usage.md#test) for the arguments, the output and the `debug` provider.
+[Commands and configuration](usage.md#test) for the arguments and the output.
 
 ## A local echo server
 
@@ -62,9 +62,6 @@ The echo server prints each batch as the platform would receive it: the `data` l
   example above.
 - **Name the test URL explicitly.** Without `--sitekick-url` or a configuration file, `send` posts to the Sitekick
   push endpoint.
-- **Expect the `debug` provider to run.** A test `send` runs every provider that applies, including `debug`: it
-  retrieves the diagnostic commands from the Sitekick debug URL (`SITEKICK_DEBUG_URL`), runs them and sends their
-  output to your test URL (see [Diagnostic mode](index.md#diagnostic-mode)).
 - **Do not leave test configuration behind.** Options passed on the command line apply to that run only; a test
   setting in `/etc/server-to-sitekick/config.py` applies to every scheduled run.
 - **Use example values** such as `example.com` when you share test output or add it to a pull request.

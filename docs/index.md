@@ -20,7 +20,7 @@ with each record; linking servers to the domains they host is designed for.
 ## Terms
 
 - **Sitekick operator**: the party that runs the Sitekick service you send to. The Sitekick operator provides the push
-  URL, defines the diagnostic commands (see [Diagnostic mode](#diagnostic-mode)) and stores the data it receives.
+  URL and stores the data it receives.
 - **Connector**: a definition on the Sitekick platform for one kind of data, such as the hosting data of a domain from
   its Plesk server; see the [Sitekick connectors site](https://yourapi.github.io/sitekick-connectors/).
 - **Data point**: one piece of information about a domain, website, server or customer that the platform keeps with
@@ -68,25 +68,12 @@ The repository contains these providers:
 |---|---|---|
 | `plesk` | Servers with Plesk, detected with `plesk version` | Designed for one record per domain on the server: the Plesk domain information, the PHP handler, and the WP Toolkit information about a WordPress site |
 | `server` | Every Linux server | One record for the server: host name, IP address, MAC address and time; with system information enabled also the output of `uptime`, `free`, `df` and `lscpu` |
-| `debug` | Every server | The output of the diagnostic commands that the Sitekick operator lists for this server, see [Diagnostic mode](#diagnostic-mode) |
 | `template` | Only its own development host | The starting point for a new provider, see [Writing a provider](providers.md) |
 | `test_body` | Only its own development host | A development provider: it generates 10,000 domain names and returns a fixed sample record in the Plesk format for each; designed for testing the push and the receiving side with realistic volumes. Do not use it against a production platform |
 
 The provider mechanism is designed for other control panels as well, such as cPanel and DirectAdmin. Adding one takes
 a module with three functions and the constants `DOMAIN_COUNT_PER_POST` and `DOMAIN_POST_INTERVAL`, as in the
 template; see [Writing a provider](providers.md).
-
-### Diagnostic mode
-
-The `debug` provider applies to every server. Every run of `send`, including the daily cron run, and every `test all`
-therefore also retrieves the diagnostic commands that the Sitekick service lists for this server, matched on host
-name, IP address or MAC address, and runs them with the privileges of the script (root under cron). `send` runs every
-listed command and sends the output; `test all` runs up to five of them and prints the output. The Sitekick operator
-defines these commands.
-
-The `debug` command runs this provider alone. `install debug` schedules the `debug` command every 5 minutes, on
-request of the Sitekick operator; running `install` again rewrites the cron file to the daily run. See
-[Installation](installation.md#diagnostic-mode).
 
 ## What is sent
 

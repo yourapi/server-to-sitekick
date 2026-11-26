@@ -45,8 +45,7 @@ The configuration file and the first run are described in
 
 ## Commands and options
 
-The commands are `send` (the default), `install [daily|debug]`, `test [provider|latest|all]` and `debug`. The
-options used most:
+The commands are `send` (the default), `install` and `test [provider|latest|all]`. The options used most:
 
 - `--queue-path PATH`: the queue directory (default `/tmp/sitekick/domains`).
 - `--sitekick-url URL`: the URL to which the records are posted (default: the Sitekick push endpoint,

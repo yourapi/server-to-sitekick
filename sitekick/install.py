@@ -20,10 +20,6 @@ def install_script(mode='daily'):
         minute = random.randint(0, 59)
         text = "# Run the domains-to-sitekick script daily at a random minute between 3 and 4 AM.\n" \
                f"{minute} 3 * * * root python3 {script_path}\n"
-    elif mode == 'debug':
-        # Get command to execute and POST the result every 5 minutes for debugging
-        text = "# Debug the domains-to-sitekick script every 5 minutes.\n" \
-               f"*/5 * * * * root python3 {script_path} debug\n"
     if not text:
         print(f"Could not generate cron file for mode {mode}")
         return
