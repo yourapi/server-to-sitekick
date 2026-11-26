@@ -16,8 +16,7 @@ once by hand, schedule it with cron and check that the data arrives.
   `plesk` command-line tool also needs root, so run `test plesk` and `send` as root on a Plesk server; the cron job
   runs as root.
 - **Outgoing HTTPS** from the server to the host of the push URL (`SITEKICK_PUSH_URL` in `sitekick/config.py`, or
-  the URL you configure). The push is the only outgoing traffic of the script; only with `--enable-autoupdate`, which
-  is designed for automatic updates and off by default, does it also contact GitHub.
+  the URL you configure). The push is the only outgoing traffic of the script.
 - **A host name that resolves to the public IP address of the server.** The script takes the IP address it sends
   from the host name of the server; when the host name resolves to a loopback address, that address is sent instead.
 
@@ -43,8 +42,9 @@ Without `git`, copy at least these parts of the repository, keeping their layout
 Every `.py` file in `providers/` (except `__init__.py`) is loaded as a provider, so keep other Python files, such as
 backup copies, out of that directory.
 
-To update, pull the repository again (`git -C /usr/local/src/server-to-sitekick pull`) or copy the new files over the
-old ones.
+The script does not update itself. To update, pull the repository again
+(`git -C /usr/local/src/server-to-sitekick pull`) or copy the new files over the old ones; the code that runs on the
+server is always the code you installed.
 
 ## Configuration file
 
