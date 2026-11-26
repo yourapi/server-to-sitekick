@@ -69,7 +69,7 @@ for. The IP address is the address that the host name resolves to (see
 
 ## Plesk record
 
-The `plesk` provider is designed for one record per domain on the server. The list of domains comes from
+The `plesk` provider produces one record per domain on the server. The list of domains comes from
 `plesk bin site --list`.
 
 | Field | Content | Source |

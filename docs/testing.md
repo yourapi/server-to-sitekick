@@ -26,6 +26,9 @@ pytest -q
 - an option on the command line takes precedence over the configuration file;
 - the commands and options that no longer exist, `debug` and `--enable-autoupdate`, are rejected.
 
+`tests/test_send.py` checks that the collection queues one file for every domain of the server, and one file for
+a domain that is listed twice.
+
 `tests/conftest.py` puts the root of the repository on the Python path, so the tests import `sitekick` and
 `providers` directly.
 

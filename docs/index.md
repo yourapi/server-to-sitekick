@@ -34,8 +34,8 @@ When the script runs with the `send` command (the default), it:
    server. The script calls each provider's `is_server_type()` and uses the providers that answer yes, for example
    `plesk` on a Plesk server.
 2. **Lists the domains.** It calls the provider's `get_domains()` for the list of domains on the server.
-3. **Collects the domain info.** It calls `get_domain_info(domain)` to collect the information of a domain; the
-   collection is designed for one record per domain on the server. The script adds a `meta` block that identifies the
+3. **Collects the domain info.** It calls `get_domain_info(domain)` to collect the information of a domain; it
+   produces one record per domain on the server. The script adds a `meta` block that identifies the
    server and the moment of collection.
 4. **Queues the records.** Each record is written as a JSON file to the queue directory (default
    `/tmp/sitekick/domains`; [Installation](installation.md#configuration-file) recommends another location).
@@ -66,7 +66,7 @@ The repository contains these providers:
 
 | Provider | Applies to | What it sends |
 |---|---|---|
-| `plesk` | Servers with Plesk, detected with `plesk version` | Designed for one record per domain on the server: the Plesk domain information, the PHP handler, and the WP Toolkit information about a WordPress site |
+| `plesk` | Servers with Plesk, detected with `plesk version` | One record per domain on the server: the Plesk domain information, the PHP handler, and the WP Toolkit information about a WordPress site |
 | `server` | Every Linux server | One record for the server: host name, IP address, MAC address and time; with system information enabled also the output of `uptime`, `free`, `df` and `lscpu` |
 | `template` | Only its own development host | The starting point for a new provider, see [Writing a provider](providers.md) |
 | `test_body` | Only its own development host | A development provider: it generates 10,000 domain names and returns a fixed sample record in the Plesk format for each; designed for testing the push and the receiving side with realistic volumes. Do not use it against a production platform |
