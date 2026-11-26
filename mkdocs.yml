@@ -1,0 +1,54 @@
+site_name: Server to Sitekick
+site_description: "Push the domain and server data of a hosting server (Plesk) to the Sitekick hosting intelligence platform."
+site_url: https://yourapi.github.io/server-to-sitekick/
+repo_url: https://github.com/yourapi/server-to-sitekick
+edit_uri: ""
+docs_dir: docs
+use_directory_urls: true
+
+# Working files in docs/ that are not part of the site:
+exclude_docs: |
+  get_info.sh
+  wordpress.txt
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+  palette:
+    scheme: default
+    primary: indigo
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Installation: installation.md
+      - Commands and configuration: usage.md
+  - Reference:
+      - Data sent to Sitekick: data.md
+  - Extend:
+      - Writing a provider: providers.md
+      - Testing: testing.md
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
